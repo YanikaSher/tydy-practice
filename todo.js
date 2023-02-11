@@ -4,63 +4,82 @@ const toDo = "to do";
 const inProgress = 'in progress';
 const done = 'done'
 
-const todo = {
-    list: {
-        'brush your teeth': done,
-        "create a new practice task": inProgress,
-        "make a bed": done,
-        "write a post": toDo,
+const todoList = [
+    {
+        task: "brush your teeth",
+        status: toDo
     },
-
-    changeStatus(task, status) {
-        if (task in todo.list) {
-            todo.list[task] = status;
-            console.log(`you add a status '${status}' in the task '${task}'`);
-        } else if (!(task in todo.list)) {
-            console.log('a task is not defined');
-        }
-    }, addTask(task, status) {
-        if (task in todo.list) {
-            console.log(`task '${task}' is already use`);
-        } else if (!(task in todo.list)) {
-            todo.list[task] = status;
-            console.log(`task '${task}' has been created`);
-        }
-    }, deleteTask(task) {
-        delete todo.list[task];
-        console.log(`task '${task}' has been deleted`);
-    }, showList() {
-        console.log('To Do:');
-        for (const show in todo.list) {
-
-            if (todo.list[show] === toDo) {
-                console.log(`  ${show};`);
-            };
-        };
-        console.log('In Progress:');
-        for (const show in todo.list) {
-
-            if (todo.list[show] === inProgress) {
-                console.log(`  ${show};`);
-            };
-        };
-        console.log('Done:');
-        for (const show in todo.list) {
-
-            if (todo.list[show] === done) {
-                console.log(`  ${show};`);
-            };
-        };
+    {
+        task: "make a bed",
+        status: inProgress
+    },
+    {
+        task: "walk the dog",
+        status: done
     }
-};
+]
+//ф-я которая изменяет статус 
+function changeStatus(task, status) {
+    todoList.find(function (todoList) {
+        if (todoList.task === task) {
+            todoList.status = status
+            console.log(`такое задания, как "${task}", было найдено и статус изменен на '${status}'`);
+            return todoList;
+        } else if (todoList.task !== task) {
+            console.log(`нет такого задания, как "${task}"`);
+            return todoList;
+        }
+    }
+    )
+}
+//ф-я которая удаляет задачу
+function deleteTask(task) {
+    for (let i = todoList.length; i--;) {
+        if (todoList[i].task === task) {
+            console.log(`задаиние "${task}" было успешно удалено`)
+            return todoList.splice(i, 1);
+        }
+    }
+}
+//ф-я которая показывает список задачь по статусу
+function showList() {
+    console.log('To Do:');
+    for (const show of todoList) {
 
+        if (show.status === toDo) {
+            console.log(`  ${show.task};`);
+        };
+    };
+    console.log('In Progress:');
+    for (const show of todoList) {
 
+        if (show.status === inProgress) {
+            console.log(`  ${show.task};`);
+        };
+    };
+    console.log('Done:');
+    for (const show of todoList) {
 
-todo.changeStatus("write a post", done);
-console.log(todo.list);
-todo.addTask('have a walk');
-console.log(todo.list);
-todo.deleteTask('have a walk');
-console.log(todo.list)
+        if (show.status === done) {
+            console.log(`  ${show.task};`);
+        };
+    };
+}
+//ф-я которая добавляет задачу с дефолтным статусом "в прогрессе"
+function addTask(nameTask) {
+    const newtask = { task: "", status: inProgress }
+    newtask.task = nameTask
+    todoList.push(newtask)
+    console.log(`задача "${nameTask}" была успешно добалена`)
+}
 
-todo.showList();
+showList();
+
+deleteTask('brush your teeth');
+console.log(todoList);
+
+addTask("run a kilometer");
+console.log(todoList);
+
+changeStatus("brush your teeth", "fgdfg");
+console.log(todoList);
